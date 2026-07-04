@@ -1,0 +1,25 @@
+name: Daily Stock Auto Filter
+
+on:
+  schedule:
+    # 預設於週一至週五台灣時間 16:30 自動執行 (對應 UTC 08:30)
+    - cron: '30 8 * * 1-5'
+  workflow_dispatch: # 允許你手動按鈕隨時測試
+
+jobs:
+  run-strategy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 複製專案程式碼
+      uses: actions/checkout@v4
+    - name: 安裝 Python 環境
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+    - name: 安裝網絡套件
+      run: pip install requests
+    - name: 啟動數據過濾與 AI 分析
+      env:
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        WECHAT_WEBHOOK_URL: ${{ secrets.WECHAT_WEBHOOK_URL }}
+      run: python run.py
